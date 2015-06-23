@@ -13,7 +13,7 @@ from nolearn.lasagne import BatchIterator
 from theano.sandbox.neighbours import neibs2images
 from lasagne.objectives import mse
 
-### this is really dumb, current nolearn doesnt play well with lasagne, 
+### this is really dumb, current nolearn doesnt play well with lasagne,
 ### so had to manually copy the file I wanted to this folder
 from shape import ReshapeLayer
 
@@ -29,6 +29,7 @@ import cPickle
 from IPython.display import Image as IPImage
 from PIL import Image
 
+
 # <codecell>
 
 class Unpool2DLayer(layers.Layer):
@@ -37,7 +38,7 @@ class Unpool2DLayer(layers.Layer):
     of a 4D tensor.
     """
     def __init__(self, incoming, ds, **kwargs):
-        
+
         super(Unpool2DLayer, self).__init__(incoming, **kwargs)
 
         if (isinstance(ds, int)):
@@ -62,12 +63,13 @@ class Unpool2DLayer(layers.Layer):
         ds = self.ds
         input_shape = input.shape
         output_shape = self.get_output_shape_for(input_shape)
-        return input.repeat(2, axis = 2).repeat(2, axis = 3)
+        return input.repeat(2, axis=2).repeat(2, axis=3)
+
 
 # <codecell>
 
-### when we load the batches to input to the neural network, we randomly / flip rotate the images, to artificially
-### increase the size of the training set
+### when we load the batches to input to the neural network, we randomly / flip
+### rotate the images, to artificially increase the size of the training set
 
 class FlipBatchIterator(BatchIterator):
 
@@ -76,9 +78,9 @@ class FlipBatchIterator(BatchIterator):
         X2b = X2b.reshape(X1b.shape)
 
         bs = X1b.shape[0]
-        h_indices = np.random.choice(bs, bs / 2, replace=False) # horizontal flip
-        v_indices = np.random.choice(bs, bs / 2, replace=False) # vertical flip
-        
+        h_indices = np.random.choice(bs, bs / 2, replace=False)  # horizontal flip
+        v_indices = np.random.choice(bs, bs / 2, replace=False)  # vertical flip
+
         ###  uncomment these lines if you want to include rotations (images must be square)  ###
         #r_indices = np.random.choice(bs, bs / 2, replace=False) # 90 degree rotation
         for X in (X1b, X2b):
@@ -100,7 +102,7 @@ f = gzip.open(fname, 'rb')
 train_set, valid_set, test_set = cPickle.load(f)
 f.close()
 X, y = train_set
-X = np.rint(X * 256).astype(np.int).reshape((-1, 1, 28,28)) # convert to (0,255) int range (we'll do our own scaling)
+X = np.rint(X * 256).astype(np.int).reshape((-1, 1, 28, 28))  # convert to (0,255) int range (we'll do our own scaling)
 mu, sigma = np.mean(X.flatten()), np.std(X.flatten())
 
 # <codecell>
@@ -124,25 +126,25 @@ ae = NeuralNet(
         ('input', layers.InputLayer),
         ('conv', layers.Conv2DLayer),
         ('pool', layers.MaxPool2DLayer),
-        ('flatten', ReshapeLayer), # output_dense
+        ('flatten', ReshapeLayer),  # output_dense
         ('encode_layer', layers.DenseLayer),
-        ('hidden', layers.DenseLayer), # output_dense
+        ('hidden', layers.DenseLayer),  # output_dense
         ('unflatten', ReshapeLayer),
         ('unpool', Unpool2DLayer),
         ('deconv', layers.Conv2DLayer),
         ('output_layer', ReshapeLayer),
         ],
     input_shape=(None, 1, 28, 28),
-    conv_num_filters=conv_filters, conv_filter_size = (filter_sizes, filter_sizes), 
+    conv_num_filters=conv_filters, conv_filter_size = (filter_sizes, filter_sizes),
     conv_border_mode="valid",
     conv_nonlinearity=None,
-    pool_ds=(2, 2),
+    pool_pool_size=(2, 2),
     flatten_shape=(([0], -1)), # not sure if necessary?
     encode_layer_num_units = encode_size,
     hidden_num_units= deconv_filters * (28 + filter_sizes - 1) ** 2 / 4,
     unflatten_shape=(([0], deconv_filters, (28 + filter_sizes - 1) / 2, (28 + filter_sizes - 1) / 2 )),
     unpool_ds=(2, 2),
-    deconv_num_filters=1, deconv_filter_size = (filter_sizes, filter_sizes), 
+    deconv_num_filters=1, deconv_filter_size = (filter_sizes, filter_sizes),
     deconv_border_mode="valid",
     deconv_nonlinearity=None,
     output_layer_shape = (([0], -1)),
@@ -154,7 +156,7 @@ ae = NeuralNet(
     verbose=1,
     )
 ae.fit(X_train, X_out)
-print 
+print
 ###  expect training / val error of about 0.087 with these parameters
 ###  if your GPU not fast enough, reduce the number of filters in the conv/deconv step
 
@@ -194,8 +196,8 @@ def get_random_images():
     new_im.paste(original_image, (0,0))
     rec_image = Image.fromarray(get_picture_array(X_pred, index))
     new_im.paste(rec_image, (original_image.size[0],0))
-    new_im.save('data/test.png', format="PNG")    
-    
+    new_im.save('data/test.png', format="PNG")
+
 get_random_images()
 IPImage('data/test.png')
 
@@ -209,7 +211,7 @@ encode_layer = ae.get_all_layers()[encode_layer_index]
 def get_output_from_nn(last_layer, X):
     indices = np.arange(128, X.shape[0], 128)
     sys.stdout.flush()
-    
+
     # not splitting into batches can cause a memory error
     X_batches = np.split(X, indices)
     out = []
@@ -247,7 +249,7 @@ print X_decoded.shape
 
 pic_array = get_picture_array(X_decoded, np.random.randint(len(X_decoded)))
 image = Image.fromarray(pic_array)
-image.save('data/test.png', format="PNG")  
+image.save('data/test.png', format="PNG")
 IPImage('data/test.png')
 
 # <codecell>
