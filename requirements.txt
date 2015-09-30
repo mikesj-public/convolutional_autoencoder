@@ -1,0 +1,17 @@
+funcsigs==0.4
+joblib==0.8.4
+Lasagne==0.2.dev1
+matplotlib==1.4.3
+mock==1.3.0
+nolearn==0.6a0.dev0
+nose==1.3.7
+numpy==1.9.3
+pbr==1.8.0
+pyparsing==2.0.3
+python-dateutil==2.4.2
+pytz==2015.6
+scikit-learn==0.16.1
+scipy==0.16.0
+six==1.9.0
+tabulate==0.7.5
+Theano==0.7.0
