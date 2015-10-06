@@ -15,3 +15,4 @@ scipy==0.16.0
 six==1.9.0
 tabulate==0.7.5
 Theano==0.7.0
+-e git://github.com/lisa-lab/pylearn2.git@47aafdc1e73ba613f5ebaa6fc63401a1fc468ded#egg=pylearn2-master
