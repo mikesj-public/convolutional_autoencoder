@@ -11,7 +11,7 @@ import numpy as np
 import theano.tensor as T
 from nolearn.lasagne import BatchIterator
 from theano.sandbox.neighbours import neibs2images
-from lasagne.objectives import mse
+from lasagne.objectives import squared_error
 
 ### this is really dumb, current nolearn doesnt play well with lasagne,
 ### so had to manually copy the file I wanted to this folder
@@ -216,7 +216,7 @@ def get_output_from_nn(last_layer, X):
     X_batches = np.split(X, indices)
     out = []
     for count, X_batch in enumerate(X_batches):
-        out.append(last_layer.get_output(X_batch).eval())
+        out.append(layers.helper.get_output(last_layer, X_batch).eval())
         sys.stdout.flush()
     return np.vstack(out)
 
