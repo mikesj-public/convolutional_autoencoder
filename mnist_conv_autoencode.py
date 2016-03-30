@@ -136,7 +136,7 @@ ae = NeuralNet(
         ],
     input_shape=(None, 1, 28, 28),
     conv_num_filters=conv_filters, conv_filter_size = (filter_sizes, filter_sizes),
-    conv_border_mode="valid",
+    # conv_border_mode="valid", removed from latest version
     conv_nonlinearity=None,
     pool_pool_size=(2, 2),
     flatten_shape=(([0], -1)), # not sure if necessary?
@@ -145,7 +145,7 @@ ae = NeuralNet(
     unflatten_shape=(([0], deconv_filters, (28 + filter_sizes - 1) / 2, (28 + filter_sizes - 1) / 2 )),
     unpool_ds=(2, 2),
     deconv_num_filters=1, deconv_filter_size = (filter_sizes, filter_sizes),
-    deconv_border_mode="valid",
+    # deconv_border_mode="valid",
     deconv_nonlinearity=None,
     output_layer_shape = (([0], -1)),
     update_learning_rate = 0.01,
