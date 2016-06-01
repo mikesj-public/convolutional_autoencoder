@@ -1,4 +1,7 @@
 # convolutional_autoencoder
+
+The original author is no longer making changes to this repo, but will review/accept pull requests...
+
 Code for a convolutional autoencoder written on python, theano, lasagne, nolearn
 
 I highly recommend you use the ipython notebook to run this, if you just need code to read, look at the python file.
