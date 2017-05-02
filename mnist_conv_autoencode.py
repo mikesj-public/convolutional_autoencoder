@@ -42,14 +42,12 @@ class Unpool2DLayer(layers.Layer):
         super(Unpool2DLayer, self).__init__(incoming, **kwargs)
 
         if (isinstance(ds, int)):
-            raise ValueError('ds must have len == 2')
+            ds = (ds, ds)
         else:
             ds = tuple(ds)
             if len(ds) != 2:
-                raise ValueError('ds must have len == 2')
-            if ds[0] != ds[1]:
-                raise ValueError('ds should be symmetric (I am lazy)')
-            self.ds = ds
+                raise ValueError('ds must be an int or pair of int')
+        self.ds = ds
 
     def get_output_shape_for(self, input_shape):
         output_shape = list(input_shape)
@@ -63,7 +61,7 @@ class Unpool2DLayer(layers.Layer):
         ds = self.ds
         input_shape = input.shape
         output_shape = self.get_output_shape_for(input_shape)
-        return input.repeat(2, axis=2).repeat(2, axis=3)
+        return input.repeat(ds[0], axis=2).repeat(ds[1], axis=3)
 
 
 # <codecell>
